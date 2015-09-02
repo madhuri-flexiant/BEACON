@@ -40,6 +40,7 @@ public class ClientSocket {
 	}
 
 	public static void main(String[] args) {
+		LOGGER.log(Level.INFO, "This will be good to see");
 		if (args.length > 0) {
 			String serverUUID = args[0];
 			String serverIP = args[1];
