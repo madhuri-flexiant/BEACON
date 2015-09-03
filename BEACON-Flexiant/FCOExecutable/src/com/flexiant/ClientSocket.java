@@ -58,26 +58,41 @@ public class ClientSocket {
 	
 	static void sendFileOverSocket() {
 		LOGGER.log(Level.FINE, "Attempt to send the file");
+		Socket socket = null;
+		InputStream inStream = null;
+		OutputStream outStream = null;
+		
 		try {
-			Socket socket = null;
 		    String host = SCANNER_IP;
 		    socket = new Socket(host, PORT);
 
-		    byte[] bytes = new byte[16 * 1024];
-		    InputStream inStream = new FileInputStream(FILE_PATH);
-		    OutputStream outStream = socket.getOutputStream();
+		    // The file is not expected to be any larger than 1KB
+		    byte[] bytes = new byte[1024];
+		    inStream = new FileInputStream(FILE_PATH);
+		    outStream = socket.getOutputStream();
 		
 		    int count;
 		    while ((count = inStream.read(bytes)) > 0) {
 		        outStream.write(bytes, 0, count);
 		    }
 		    LOGGER.log(Level.INFO, "The file has been sent to the scanner VM");
-		    outStream.close();
-		    inStream.close();
-		    socket.close();
-	
+
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e );
+		} finally {
+			try {
+				if (outStream != null) {
+					outStream.close();
+				}
+				if (inStream != null) {
+					inStream.close();
+				}
+			    if (socket != null) {
+			    	socket.close();
+			    }
+			} catch (IOException e) {
+        		LOGGER.log(Level.SEVERE, "Failed to close connection", e);
+			}
 		}
 	}
 	
@@ -94,9 +109,14 @@ public class ClientSocket {
 				writer.write(entry.getValue());
 				writer.newLine();
 			}
-			writer.close();
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e );
+		} finally {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				LOGGER.log(Level.SEVERE, "Failed to close the BufferedWriter", e);
+			}
 		}
 	}
 }
