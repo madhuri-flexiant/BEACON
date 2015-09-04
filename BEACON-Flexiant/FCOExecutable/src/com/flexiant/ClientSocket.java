@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 */
 public class ClientSocket {
 
-	private static final String FILE_PATH = "/home/mramannavar/beacon/file.txt";
+	private static final String FILE_PATH = "/home/mramannavar/file.txt";
 	
 	private static final LogManager LOG_MANAGER = LogManager.getLogManager();
-	private static final Logger LOGGER = Logger.getLogger("confLogger");
+	private static final Logger LOGGER = Logger.getLogger("logger");
 	
 	private static final String SCANNER_IP = "109.231.126.199";
 	private static final int PORT = 8341;
@@ -33,7 +33,7 @@ public class ClientSocket {
 	// Fetch the log configuration
 	static{
 		try {
-			LOG_MANAGER.readConfiguration(new FileInputStream("/home/mramannavar/beacon/logging.properties"));
+			LOG_MANAGER.readConfiguration(new FileInputStream("/home/mramannavar/logging.properties"));
 		} catch (IOException exception) {
 			LOGGER.log(Level.SEVERE, "Error in loading Logger configuration", exception);
 		}	
