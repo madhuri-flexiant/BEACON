@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
@@ -27,7 +29,7 @@ public class ClientSocket {
 	private static final LogManager LOG_MANAGER = LogManager.getLogManager();
 	private static final Logger LOGGER = Logger.getLogger("logger");
 	
-	private static final String SCANNER_IP = "109.231.126.199";
+	private static final String SCANNER_IP = "109.231.126.249";
 	private static final int PORT = 8341;
 
 	// Fetch the log configuration
@@ -46,46 +48,36 @@ public class ClientSocket {
 			String serverIP = args[1];
 			LOGGER.log(Level.INFO, "Execuatble has been passed with following args: " 
 					+ serverUUID + " and " + serverIP);
+
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("ServerUUID", serverUUID);
 			map.put("IP", serverIP);
-			writeToFile(map);
-			sendFileOverSocket();
+
+			sendDataOverSocket(map);
 		} else {
 			LOGGER.log(Level.SEVERE, "Error - No arguments passed");
 		}
 	}
 	
-	static void sendFileOverSocket() {
+	static void sendDataOverSocket(Map<String, String> map) {
 		LOGGER.log(Level.FINE, "Attempt to send the file");
 		Socket socket = null;
-		InputStream inStream = null;
-		OutputStream outStream = null;
+		ObjectOutputStream oos = null;
 		
 		try {
 		    String host = SCANNER_IP;
 		    socket = new Socket(host, PORT);
-
-		    // The file is not expected to be any larger than 1KB
-		    byte[] bytes = new byte[1024];
-		    inStream = new FileInputStream(FILE_PATH);
-		    outStream = socket.getOutputStream();
+		    oos = new ObjectOutputStream(socket.getOutputStream());
+		    oos.writeObject(map);
+		    LOGGER.log(Level.INFO, "The data has been sent to the scanner VM");
 		
-		    int count;
-		    while ((count = inStream.read(bytes)) > 0) {
-		        outStream.write(bytes, 0, count);
-		    }
-		    LOGGER.log(Level.INFO, "The file has been sent to the scanner VM");
-
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e );
+		
 		} finally {
 			try {
-				if (outStream != null) {
-					outStream.close();
-				}
-				if (inStream != null) {
-					inStream.close();
+				if (oos != null) {
+					oos.close();
 				}
 			    if (socket != null) {
 			    	socket.close();
@@ -109,8 +101,10 @@ public class ClientSocket {
 				writer.write(entry.getValue());
 				writer.newLine();
 			}
+		
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e );
+		
 		} finally {
 			try {
 				writer.close();
