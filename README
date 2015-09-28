@@ -1,0 +1,4 @@
+*** CONSIDER IN FUTURE IF THINGS ARE FAVOURABLE ***
+Make the scanner self healing 
+  - Start the scanner in case its not up
+  - Check to the see if the task/target exist - delete the old ones
