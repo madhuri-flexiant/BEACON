@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,32 +81,6 @@ public class ClientSocket {
 			    }
 			} catch (IOException e) {
         		LOGGER.log(Level.SEVERE, "Failed to close connection", e);
-			}
-		}
-	}
-	
-	static synchronized void writeToFile(Map<String, String> content) {
-		BufferedWriter writer = null;
-		
-		try {
-			LOGGER.log(Level.FINE, "Attempt to write to file");
-			File file = new File(FILE_PATH);
-			writer = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
-			for (Map.Entry<String, String> entry : content.entrySet()) {
-				writer.write(entry.getKey());
-				writer.write(":");
-				writer.write(entry.getValue());
-				writer.newLine();
-			}
-		
-		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e );
-		
-		} finally {
-			try {
-				writer.close();
-			} catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "Failed to close the BufferedWriter", e);
 			}
 		}
 	}
