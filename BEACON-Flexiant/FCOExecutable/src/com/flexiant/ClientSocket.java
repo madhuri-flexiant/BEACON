@@ -1,9 +1,6 @@
 package com.flexiant;
 
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -21,8 +18,6 @@ import java.util.logging.Logger;
 */
 public class ClientSocket {
 
-	private static final String FILE_PATH = "/home/mramannavar/file.txt";
-	
 	private static final LogManager LOG_MANAGER = LogManager.getLogManager();
 	private static final Logger LOGGER = Logger.getLogger("logger");
 	
@@ -43,13 +38,15 @@ public class ClientSocket {
 		if (args.length > 0) {
 			String serverUUID = args[0];
 			String serverIP = args[1];
+			String emailID = args[2];
 			LOGGER.log(Level.INFO, "Execuatble has been passed with following args: " 
-					+ serverUUID + " and " + serverIP);
+					+ serverUUID + " " + serverIP + " " + emailID);
 
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("ServerUUID", serverUUID);
 			map.put("IP", serverIP);
-
+			map.put("EmailID", emailID);
+			
 			sendDataOverSocket(map);
 		} else {
 			LOGGER.log(Level.SEVERE, "Error - No arguments passed");
