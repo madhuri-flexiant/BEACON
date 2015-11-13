@@ -46,6 +46,14 @@ public class ClientSocket {
 			map.put("ServerUUID", serverUUID);
 			map.put("IP", serverIP);
 			map.put("EmailID", emailID);
+			try {
+				// Added sleep here till the VM actually starts running
+				// However this is not 100% reliable, maybe try SSH the VM TODO
+				Thread.sleep(180000); // 3 minutes
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			}
 			
 			sendDataOverSocket(map);
 		} else {
