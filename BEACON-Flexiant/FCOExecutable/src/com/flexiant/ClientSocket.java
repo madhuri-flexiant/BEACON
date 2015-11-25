@@ -4,8 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -21,7 +19,7 @@ public class ClientSocket {
 	private static final LogManager LOG_MANAGER = LogManager.getLogManager();
 	private static final Logger LOGGER = Logger.getLogger("logger");
 	
-	private static final String SCANNER_IP = "109.231.126.249";
+	private static final String SCANNER_IP = "109.231.126.23";
 	private static final int PORT = 8341;
 
 	// Fetch the log configuration
@@ -42,10 +40,8 @@ public class ClientSocket {
 			LOGGER.log(Level.INFO, "Execuatble has been passed with following args: " 
 					+ serverUUID + " " + serverIP + " " + emailID);
 
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("ServerUUID", serverUUID);
-			map.put("IP", serverIP);
-			map.put("EmailID", emailID);
+			VMDetails details = new VMDetails(serverIP, serverUUID, emailID);
+			
 			try {
 				// Added sleep here till the VM actually starts running
 				// However this is not 100% reliable, maybe try SSH the VM TODO
@@ -55,13 +51,13 @@ public class ClientSocket {
 				e.printStackTrace();
 			}
 			
-			sendDataOverSocket(map);
+			sendDataOverSocket(details);
 		} else {
 			LOGGER.log(Level.SEVERE, "Error - No arguments passed");
 		}
 	}
 	
-	static void sendDataOverSocket(Map<String, String> map) {
+	static void sendDataOverSocket(VMDetails details) {
 		LOGGER.log(Level.FINE, "Attempt to send the file");
 		Socket socket = null;
 		ObjectOutputStream oos = null;
@@ -70,7 +66,7 @@ public class ClientSocket {
 		    String host = SCANNER_IP;
 		    socket = new Socket(host, PORT);
 		    oos = new ObjectOutputStream(socket.getOutputStream());
-		    oos.writeObject(map);
+		    oos.writeObject(details);
 		    LOGGER.log(Level.INFO, "The data has been sent to the scanner VM");
 		
 		} catch (IOException e) {
