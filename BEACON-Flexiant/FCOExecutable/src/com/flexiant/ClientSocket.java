@@ -19,7 +19,7 @@ public class ClientSocket {
 	private static final LogManager LOG_MANAGER = LogManager.getLogManager();
 	private static final Logger LOGGER = Logger.getLogger("logger");
 	
-	private static final String SCANNER_IP = "109.231.126.23";
+	private static final String SCANNER_IP = "109.231.126.249";
 	private static final int PORT = 8341;
 
 	// Fetch the log configuration
