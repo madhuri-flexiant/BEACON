@@ -1,12 +1,24 @@
 package com.flexiant;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Enumeration;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
 * This is just a rough draft of the executable jar that will be called by the FCO trigger 
@@ -19,8 +31,8 @@ public class ClientSocket {
 	private static final LogManager LOG_MANAGER = LogManager.getLogManager();
 	private static final Logger LOGGER = Logger.getLogger("logger");
 	
-	private static final String SCANNER_IP = "109.231.126.249";
-	private static final int PORT = 8341;
+	//private static final String SCANNER_IP = "109.231.126.249";
+	//private static final int PORT = 8341;
 
 	// Fetch the log configuration
 	static{
@@ -30,9 +42,38 @@ public class ClientSocket {
 			LOGGER.log(Level.SEVERE, "Error in loading Logger configuration", exception);
 		}	
 	}
-
+	
+	
+	static String SCANNER_IP = "";
+	static int PORT ;
+	
 	public static void main(String[] args) {
 		LOGGER.log(Level.INFO, "This will be good to see");
+		
+		// New V1 XML Load file for  details
+		try{
+		File fXmlFile = new File("details.xml");
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+		doc.getDocumentElement().normalize();
+		NodeList nList = doc.getElementsByTagName("details");
+		
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+										
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+				SCANNER_IP = eElement.getAttribute("ip");
+				PORT =  Integer.parseInt(eElement.getAttribute("port"));
+			}
+		}
+		}
+		catch (Exception e) {
+			e.printStackTrace();	
+		}
 		if (args.length > 0) {
 			String serverUUID = args[0];
 			String serverIP = args[1];
