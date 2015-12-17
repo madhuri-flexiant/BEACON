@@ -31,25 +31,27 @@ public class ClientSocket {
 	private static final LogManager LOG_MANAGER = LogManager.getLogManager();
 	private static final Logger LOGGER = Logger.getLogger("logger");
 	
-	//private static final String SCANNER_IP = "109.231.126.249";
-	//private static final int PORT = 8341;
+	private static final String SCANNER_IP = "109.231.126.249";
+	private static final int PORT = 8341;
 
 	// Fetch the log configuration
 	static{
 		try {
-			LOG_MANAGER.readConfiguration(new FileInputStream("/home/mramannavar/logging.properties"));
+			//this needs updated to load location from xml path instead
+			LOG_MANAGER.readConfiguration(new FileInputStream("/Users/dwhigham/Desktop/beaconscannerjar/logging.properties"));
+			//LOG_MANAGER.readConfiguration(new FileInputStream("/home/mramannavar/logging.properties"));
 		} catch (IOException exception) {
 			LOGGER.log(Level.SEVERE, "Error in loading Logger configuration", exception);
 		}	
 	}
 	
 	
-	static String SCANNER_IP = "";
-	static int PORT ;
+	//static String SCANNER_IP = "";
+	//static int PORT ;
 	
 	public static void main(String[] args) {
 		LOGGER.log(Level.INFO, "This will be good to see");
-		
+	/*	
 		// New V1 XML Load file for  details
 		try{
 		File fXmlFile = new File("details.xml");
@@ -74,6 +76,7 @@ public class ClientSocket {
 		catch (Exception e) {
 			e.printStackTrace();	
 		}
+		*/
 		if (args.length > 0) {
 			String serverUUID = args[0];
 			String serverIP = args[1];
